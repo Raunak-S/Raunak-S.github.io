@@ -1,41 +1,50 @@
-## Welcome to GitHub Pages
+# React + TypeScript + Vite
 
-You can use the [editor on GitHub](https://github.com/Raunak-S/Raunak-S.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Currently, two official plugins are available:
 
-### Markdown
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Expanding the ESLint configuration
 
-```markdown
-Syntax highlighted code block
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-# Header 1
-## Header 2
-### Header 3
+- Configure the top-level `parserOptions` property like this:
 
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+```js
+export default tseslint.config({
+  languageOptions: {
+    // other options...
+    parserOptions: {
+      project: ['./tsconfig.node.json', './tsconfig.app.json'],
+      tsconfigRootDir: import.meta.dirname,
+    },
+  },
+})
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
+- Optionally add `...tseslint.configs.stylisticTypeChecked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
 
-### Jekyll Themes
+```js
+// eslint.config.js
+import react from 'eslint-plugin-react'
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Raunak-S/Raunak-S.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
-
-### Website
-
-Personal website can be found at [Raunak-S.github.io](https://www.Raunak-S.github.io).
+export default tseslint.config({
+  // Set the react version
+  settings: { react: { version: '18.3' } },
+  plugins: {
+    // Add the react plugin
+    react,
+  },
+  rules: {
+    // other rules...
+    // Enable its recommended rules
+    ...react.configs.recommended.rules,
+    ...react.configs['jsx-runtime'].rules,
+  },
+})
+```
